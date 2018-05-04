@@ -18,6 +18,8 @@ class Article extends Model
 
     protected $table = "articles";
     public $timestamps = true;
+    protected $fillable = ['author', 'id'];
+
 
     
 

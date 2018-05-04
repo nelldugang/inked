@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('main_content')
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -15,7 +15,7 @@
                             <label for="username" class="col-md-4 control-label">username</label>
 
                             <div class="col-md-6">
-                                <input id="username" type="username" class="form-control" name="username" value="{{ old('username') }}" required autofocus>
+                                <input id="username" type="text" class="form-control" name="username" value="{{ old('username') }}" required autofocus>
 
                                 @if ($errors->has('username'))
                                     <span class="help-block">

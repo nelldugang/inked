@@ -1,7 +1,7 @@
-@extends('articles.applayout')
+@extends('layouts.app')
 @section('main_content')
 
-<a href='{{url("articles")}}'>Back</a>
+
 
 @if (count($errors) > 0)
 	<ul>
@@ -21,18 +21,22 @@
     </div>
 @endif
 
+<div class="container">
 
+<a class="btn" href='{{url("articles")}}'>Go Back</a>
 <h1>
 	Create a new article
 </h1>
 
-<form action='' method="POST" enctype="multipart/form-data">
-	
-	Title: <br><input type:"text" name="title" class="form-control"><br>
-	Content: <br><textarea name="content" class="form-control"></textarea><br>
+<form action="" method="POST" enctype="multipart/form-data">
+	{{ csrf_field() }}
+	Title: <br><input type="text" name="title" class="form-control"><br>
+	Content: <br><textarea id="content" name="content" class="form-control"></textarea><br>
 
+	Upload an Image
 	<input type="file" name="image">
-	<input type="hidden" name="_token" value="{{ csrf_token() }}">
-	<input type="submit">
+	<br>
+	<input class="btn" type="submit">
 </form>
+</div>
 @endsection

@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/profile';
+    protected $redirectTo = '/articles';
 
     /**
      * Create a new controller instance.
@@ -57,17 +57,17 @@ class LoginController extends Controller
         return redirect('/login');
     }
 
-    protected function authenticated(Request $request, $user)
-    {
-        if($user->username === 'admin') {
-            return redirect()->intended('/articles'); // it will be according to your routes.
+    // protected function authenticated(Request $request, $user)
+    // {
+    //     if($user->username === 'admin') {
+    //         return redirect()->intended('/articles'); // it will be according to your routes.
 
-        } else {
-            return redirect()->intended('/listArticles'); // it also be according to your need and routes
-        }
+    //     } else {
+    //         return redirect()->intended('/listArticles'); // it also be according to your need and routes
+    //     }
 
-        $value = $request->session()->get('username');
-    }
+    //     $value = $request->session()->get('username');
+    // }
 
     
 }

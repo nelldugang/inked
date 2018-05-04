@@ -36,4 +36,9 @@ class ResetPasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
+    public function __construct()
+    {
+        $this->middleware('articles');
+    }
 }

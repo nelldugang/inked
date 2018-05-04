@@ -52,6 +52,11 @@ Route::get('/articles',
 Route::get('/articles/create',
 	'ArticlesController@create');
 
+Route::group(['middleware' => 'is.admin'], function(){
+
+	
+});
+
 Route::get('/articles/{id}',
 	'ArticlesController@show');
 
@@ -70,9 +75,6 @@ Route::post('/articles/{id}/updateArticles',
 Route::get('/uploadimg',
 'ArticlesController@index');
 
-Route::post('/articles/{id}/updateArticles',
-	'ArticlesController@updateArticles');
-
 Route::post('/imageupload',
 	'ArticlesController@imageupload')->name('imageupload');
 
@@ -90,18 +92,26 @@ Route::get('/uploadfile', 'UploadFileController@index');
 Route::post('/uploadfile', 'UploadFileController@showUploadFile');
 
 ;
-
 Route::get('/dashboard', function () {
     return 'hellow world';
 });
+
+Route::get('/profile/{id}/changepassword',
+	'UserController@showChangePasswordForm');
+
+Route::post('/profile/{id}/updatePassword','UserController@updatePassword')->name('changePassword');
+
+Route::get('/articles/{id}',
+	'ArticlesController@show');
+
+Route::post('/articles/{id}/updateComment',
+	'ArticlesController@updateComment');
+
 /////////////////////////////////////
 //Route for User
 Route::get('/profile',
 	'UserController@profile');
 Route::post('/profile', 'UserController@update_avatar');
-
-Route::get('/listArticles',
-	'UserController@getArticles');
 
 Route::get('/listArticles/{id}',
 	'UserController@showOneArticle');
@@ -111,8 +121,6 @@ Route::get('/listArticles',
 
 Route::post('/listArticles/{id}',
 	'UserController@postCommentUser');
-
-
 
 
 

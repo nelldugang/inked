@@ -8,7 +8,8 @@ use Auth;
 use Image;
 use App\Article;
 use App\Comment;
-use DB;
+use App\User;
+use Illuminate\Support\Facades\Hash;
 
 
 class UserController extends Controller
@@ -69,9 +70,52 @@ class UserController extends Controller
 
     }
 
-        function getArticles(){
-      $articles1 = DB::table('articles') -> where('id', 15) -> get();
-      return view('home', compact('articles1'));
+      /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string|null  $guard
+     * @return mixed
+     */
+    public function handle($request, Closure $next, $guard = null)
+    {
+        if (Auth::guard($guard)->check()) {
+            return redirect('/articles');
+        }
+
+        return $next($request);
+    }
+
+    public function showChangePasswordForm($id){
+        $current_user = Auth::user();
+        return view('articles.changepassword',compact('current_user'));
+    }
+
+    public function updatePassword(Request $request){
+         if (!(Hash::check($request->get('currentpassword'), Auth::user()->password))) {
+            // The passwords matches
+            return redirect()->back()->with("error","Your current password does not matches with the password you provided. Please try again.");
+        }
+ 
+        if(strcmp($request->get('currentpassword'), $request->get('newpassword')) == 0){
+            //Current password and new password are same
+            return redirect()->back()->with("alert2","New Password cannot be same as your current password. Please choose a different password.");
+        }
+ 
+        $validatedData = $request->validate([
+            'currentpassword' => 'required',
+            'newpassword' => 'required|string|min:6|confirmed'
+            // 'confirmpassword'   =>  'required|same:newpassword',
+        ]);
+ 
+        //Change Password
+        $user = Auth::user();
+        $user->password = bcrypt($request->get('newpassword'));
+        $user->save();
+ 
+        return redirect()->back()->with("alert","Password changed successfully !");
+ 
     }
      
 

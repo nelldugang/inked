@@ -9,6 +9,7 @@ use Auth;
 use App\Comment;
 use Image;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class ArticlesController extends Controller
 {
@@ -24,7 +25,7 @@ class ArticlesController extends Controller
     // 	$var1 = 3;
     // 	$var2 = 5;
     // 	return view('iftest', compact('var1','var2'));
-    // }  
+    // }
 
     // function insertArticles(){
     // 	DB::table('articles') -> insert(
@@ -33,8 +34,8 @@ class ArticlesController extends Controller
     // }
 
     // function getArticles(){
-    // 	$articles1 = DB::table('articles') -> where('id', 2) -> get();
-    // 	return view('articles.articles_list', compact('articles1'));
+    // 	$articles = DB::table('articles') -> where('id', 2) -> get();
+    // 	return view('articles.articles_list', compact('articles'));
     // }
 
     // function updateArticles(){
@@ -54,6 +55,7 @@ class ArticlesController extends Controller
 
     function show($id){
     	$article = Article::find($id);
+      
       // $articles = Article::all();
     	// return view('articles.articles_show_single_item',
     	// 	compact('article'));
@@ -66,31 +68,51 @@ class ArticlesController extends Controller
     	return view('articles.articles_create');
     }
 
-    function store(Request $request){
-    	$title = $request -> get('title');
-    	$content = $request -> get('content');
-      $author = Auth::user()->id;
+   //  function store(Request $request){
+   //  	$title = $request -> get('title');
+   //  	$content = $request -> get('content');
+   //    $author = Auth::user()->id;
+   //  	$rules = array(
+   //  		'title' => 'required | min:3 | max:100  | regex:/^[\pL\s\-]+$/u',
+   //  		'content' => 'required '
+   //  		);
 
-
-    	$rules = array(
-    		'title' => 'required | min:3 | max:100  | regex:/^[\pL\s\-]+$/u',
-    		'content' => 'required '
-    		);
-
-    	$this->validate($request,$rules);
+   //  	$this->validate($request,$rules);
     	
-    	$article_obj = new Article();
-    	$article_obj -> title = $title;
-    	$article_obj ->	content = $content;
-      $article_obj -> author = $author;
-    	$article_obj -> save();
+   //  	$article_obj = new Article();
+   //  	$article_obj -> title = $title;
+   //  	$article_obj ->	content = $content;
+   //    $article_obj -> author = $author;
+   //  	$article_obj -> save();
 
-    	// return view('articles.articles_create');
-    	return redirect('articles')->with('alert', 'New Article Added!');
-      // return back()->with('alert', 'Article Added!');
-  	}
+   //  	// return view('articles.articles_create');
+   //  	return redirect('articles')->with('alert', 'New Article Added!');
+   //    // return back()->with('alert', 'Article Added!');
+  	// }
+function store(Request $request){
+      $title = $request->title;
+      $content = $request->content;
+      $thumbnailImage = $request->file('image');
+      //image going to the folder
+      $file = $thumbnailImage;
+      $namefile = $file->getClientOriginalExtension();
+      $finalfilename = rand(123456,999999).".".$namefile;
+      $destinationPath = public_path('/images');
+      $file->move($destinationPath,$finalfilename);
+      $rules = array(
+        'title' => 'required | min:3 | max:50',
+        'content' => 'required | min:3'
+      );
+      $this->validate($request,$rules);
 
+      $article_obj = new Article();
+      $article_obj->title = $title;
+      $article_obj->content = $content;
+      $article_obj->image = $finalfilename;
+      $article_obj->save();
 
+      return back()->with('alert', 'New Article Added!');
+    }
 
     function update($id){
       $article = Article::find($id);
@@ -109,26 +131,15 @@ class ArticlesController extends Controller
       $articles->save();
       // return redirect('articles')->with('alert', 'Updated!');
       if(!is_null($request->file('image'))){
-        $articlesa = Article::find($id);
+        $articles1 = Article::find($id);
         $articles = $request->file('image');
+        
         $image_ext = $articles->getClientOriginalExtension();
         $new_image_name = rand(123456,999999).".".$image_ext;
         $destination_path = public_path('/images');
         $articles->move($destination_path, $new_image_name);
-        $articlesa->image = $new_image_name;
-        $articlesa->save();
-
-          if(!is_null($request->file('image2'))){
-          $articlesa = Article::find($id);
-          $articles = $request->file('image2');
-          $image_ext = $articles->getClientOriginalExtension();
-          $new_image_name = rand(123456,999999).".".$image_ext;
-          $destination_path = public_path('/images');
-          $articles->move($destination_path, $new_image_name);
-          $articlesa->image = $new_image_name;
-          $articlesa->save();
-        }
-
+        $articles1->image = $new_image_name;
+        $articles1->save();
       }
 
       return back()->with('alert', 'Updated!');
@@ -202,10 +213,14 @@ class ArticlesController extends Controller
       }
     }
 
+    function updateComment(Request $request, $id){
+      $articles = Comment::find($id);
+      $articles->description = $request->commentdescription;
+      $articles->save();
+      return back()->with('alert', 'Updated Comment');
+    }
 
-
-
-  	
+    
 } 
 
 

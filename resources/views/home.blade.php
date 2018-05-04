@@ -25,31 +25,23 @@
     </div>
 </div>--}}
 
+{{-- <h2>Current preference: {{ $preference }}</h2>
+
+<h2>Set preference:</h2>
+
+<form action='{{ url("setpreference") }}' method="POST">
+{{ csrf_field() }}
+<div class="form-group">
+<label>Preference:
+<select class="input-group" name="preference">
+    <option value="Abigail">Abigail</option>
+    <option value="Maria">Maria</option>
+    <option value="Sora">Sora</option>
+</select>
+
+<input type="submit" value="Set">
+</form>
+</label>
+</div> --}}
 
 
-<h2 style="text-align: center">List of Articles</h2><br>
-@foreach($list_articles as $article)
-<div class="container" style="margin-bottom: 40px">
-<div class="col-sm-10 col-md-offset-1" style="border: 5px double pink;">
-<div class="row" style="padding:20px;">
-
-
-
-    <h2> {{ $article -> title }} </h2><p style="font-size: 15px;font-style: italic;">Created : {{ date('F d, Y', strtotime($article->created_at)) }} by Admin.<a href='{{ url("listArticles/$article->id")}}'> Leave a comment</a></p>
-
-    <img src="/images/{{ $article->image }}" style="width:250px;float:left; border: 10px solid black; margin-right: 20px">
-     <!--foreach (array as member)-->
-    
-    <p style="font-size: 15px">{{ $article->content }}</p>
-
-    
-
-
-</div><!--row-->
-</div><!--col-->
-</div><!--container-->
-
-@endforeach
-
-
-@endsection
